@@ -1,0 +1,7 @@
+@for (msg of db.dbmessages(); track $index) {
+    @if (msg.sr === 'sent') {
+        <app-send-msg [label]="msg.text" [time]="msg.time"/>
+    } @else if (msg.sr === 'received') {
+        <app-recv-msg [label]="msg.text" [time]="msg.time"/>
+    }
+}

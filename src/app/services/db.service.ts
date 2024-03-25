@@ -1,4 +1,3 @@
-import { compileClassDebugInfo, computeMsgId } from '@angular/compiler';
 import { Injectable, computed, signal } from '@angular/core';
 
 @Injectable({
@@ -13,57 +12,91 @@ export class DbService {
     return hours + ':' + minutes
   }
 
-  private lists = signal<User[]>([
-      { name:"Hannah", text:"Che fai stasera?", time:this.getRandomTime(), count:`${Math.floor(Math.random()*35)}`},
-      { name:"Pippo", text:"Ok grazie", time:this.getRandomTime(), count:`${Math.floor(Math.random()*35)}`},
-      { name:"Andrea", text:"Abbiamo lo stesso nome ahahha", time:`${Math.floor(Math.random()*24)}:${Math.floor(Math.random()*60).toString().padStart(2,'0')}`, count:`${Math.floor(Math.random()*35)}`},
-      { name:"Paolo", text:"Facciamo un applauso!", time:this.getRandomTime(), count:`${Math.floor(Math.random()*35)}`},
-      { name:"UniPi-Informatica", text:"Qualcuno può rispondere!!??!?!?", time:this.getRandomTime(), count:`${Math.floor(Math.random()*35)}`},
-      { name:"Gina", text:"Hello!", time:this.getRandomTime(), count:`${Math.floor(Math.random()*35)}`},
-  ]);
+  selectedChat = signal<string>("");
 
-  dblists = computed(()=>this.lists());
-
-  private messages = signal<Message[]> ([
-      {sr:"received", text:"Che fai stasera?", time:"13:38"},
-      {sr:"received", text:"Tutto ok", time:"13:38"},
-      {sr:"sent", text:"Tutto bene, te?", time:"13:35"},
-      {sr:"sent", text:"Ehi", time:"13:35"},
-      {sr:"received", text:"Ciao, come va?", time:"13:33"}
-  ]);
-
-  dbmessages = computed(()=>this.messages())
-
-  getLists() {
-      return this.lists;
+  changeChat(id:string) {
+    this.selectedChat.set(id);
   }
 
-  getMessages() {
-      return this.messages;
+  private chatList = signal<Chat[]>([
+      { id:'1', group:false, name:"Hannah", text:"Che fai stasera?", time:"13:38", count:`2`,
+          messages:[
+            {sender:"Hannah", text:"Che fai stasera?", time:"13:38"},
+            {sender:"Hannah", text:"Tutto ok", time:"13:38"},
+            {sender:"sent", text:"Tutto bene, te?", time:"13:35"},
+            {sender:"sent", text:"Ehi", time:"13:35"},
+            {sender:"Hannah", text:"Ciao, come va?", time:"13:33"}
+        ]},
+      { id:'2', group:false, name:"Pippo", text:"Ok grazie", time:"20:12", count:`1`,
+          messages:[
+            {sender:"Pippo", text:"Ok grazie", time:"20:12"},
+            {sender:"sent", text:"Ti ho usato come variabile anche oggi!", time:"19:02"},
+          ]},
+      { id:'3', group:false, name:"Paolo", text:"Facciamo un applauso!", time:"10:42", count:`1`,
+          messages:[
+            {sender:"Paolo", text:"Facciamo un applauso!", time:"10:42"},
+          ]},
+      { id:'4', group:true, name:"UniPi-Informatica", text:"Qualcuno può rispondere!!??!?!?", time:"03:12", count:`3`,
+      messages:[
+        {sender:"Giovanni", text:"Qualcuno può rispondere!!??!?!?", time:"03:12"},
+        {sender:"Giovanni", text:"Quando c'è il compitino di IIA", time:"02:33"},
+        {sender:"Giangiorgio", text:"hanno avviato la riunione", time:"14:12"},
+      ]},
+  ]);
+
+  dblists = computed(()=>this.chatList());
+
+  getChat(id:string) {
+    return this.chatList().find(c=>c.id===id);
   }
 
-  addMessage(sr:'sent'|'received', text:string) {
+  getMessages(id:string) {
+    return this.getChat(id)?.messages ?? [];
+  }
+
+  isGroup(name:string) {
+    return this.getChat(name)?.group ?? false;
+  }
+
+  addChat(group:boolean, name:string) {
+    this.chatList.set([...this.chatList(), {
+      id:window.crypto.randomUUID(),
+      group:group,
+      name:name,
+      text:'',
+      time:'',
+      count:'0',
+      messages:[]
+    }])
+  }
+
+  addMessage(id:string, sender:'sent'|'received', text:string) {
       const currentTime = new Date();
-        const hours = currentTime.getHours().toString().padStart(2,'0');
-        const minutes = currentTime.getMinutes().toString().padStart(2, '0');
-        const msg:Message = {
-            sr:sr,
-            text:text,
-            time:hours+':'+minutes
-        }
-      this.messages().unshift(msg);
+      const hours = currentTime.getHours().toString().padStart(2,'0');
+      const minutes = currentTime.getMinutes().toString().padStart(2, '0');
+      const msg:Message = {
+          sender:sender,
+          text:text,
+          time:hours+':'+minutes
+      }
+      this.chatList.set(this.chatList().map(c => c.id===id
+        ? {...c, messages: [msg, ...c.messages]}
+        : c));
   }
 }
 
-export interface User {
+export interface Chat {
+  id: string;
+  group: boolean
   name: string
   text: string
   time: string
   count: string
+  messages: Message[]
 }
 
 export interface Message {
-  sr: 'sent'|'received'
+  sender: string
   text: string
   time: string
 }

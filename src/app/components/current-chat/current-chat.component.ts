@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 import { OpenedChatComponent } from '../opened-chat/opened-chat.component';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DbService } from '../../services/db.service';
@@ -15,13 +15,23 @@ export class CurrentChatComponent {
 
   db = inject(DbService)
 
+  id = computed(()=>this.db.selectedChat())
+
+  isOnline() {
+    return Math.random() < 0.1;
+  }
+
+  randomLastAccess() {
+    return Math.floor(Math.random()*59+1);
+  }
+
   onKeyUp(e: KeyboardEvent) {
     if(e.key === 'Enter' && this.text.valid) {
-      this.db.addMessage('sent', this.text.value!)
+      this.db.addMessage(this.id(), 'sent', this.text.value!)
       this.text.setValue('')
     }
     if(e.key === 'Control' && this.text.valid) {
-      this.db.addMessage('received', this.text.value!)
+      this.db.addMessage(this.id(), 'received', this.text.value!)
       this.text.setValue('')
     }
     if(e.key === 'Escape') {

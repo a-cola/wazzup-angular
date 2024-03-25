@@ -29,15 +29,24 @@
     </div>
 </div>
 <div class="search">
-    <input type="text" placeholder="Search or start a new chat" style="width: 100%; padding:2px; margin: 3px; border-radius: 20px; padding-left: 8px;">
+    <input
+        type="text"
+        placeholder="Search or start a new chat"
+        style="width: 100%; padding:2px; margin: 3px; border-radius: 20px; padding-left: 8px;"
+        [formControl]="text"
+        (keyup)="onKeyUp($event)"
+        >
+        
 </div>
 <div class="chat-container">
     @for (chat of db.dblists(); track $index) {
         <app-chat-small
             class="chat-small"
             [name]="chat.name"
-            [label]="chat.name==='Hannah'?db.dbmessages()[0].text:chat.text"
-            [time]="chat.name==='Hannah'?db.dbmessages()[0].time:chat.time"
-            [count]="chat.name==='Hannah'?'':chat.count"/>
+            [label]=" db.getMessages(chat.id).length!==0?db.getMessages(chat.id)[0].text:'' "
+            [time]=" db.getMessages(chat.id).length!==0?db.getMessages(chat.id)[0].time:'' "
+            [count]="chat.count"
+            (click)="openChat(chat)"
+            />
     }
 </div>

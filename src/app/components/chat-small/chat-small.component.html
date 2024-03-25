@@ -9,5 +9,8 @@
 </div>
 <div class="info">
     <span class="time">{{time()}}</span>
-    <span [class.notify-count]="name()!=='Hannah'">{{count()}}</span>
+    @if (count()!=='0') {
+        <span class="notify-count">{{count()}}</span>
+    }
+    
 </div>

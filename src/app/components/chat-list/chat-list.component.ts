@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { ChatSmallComponent } from '../chat-small/chat-small.component';
 import { Chat, DbService } from '../../services/db.service';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-chat-list',
@@ -15,9 +16,11 @@ export class ChatListComponent {
 
   text = new FormControl('', Validators.required);
 
+  router = inject(Router);
+
   openChat(chat:Chat) {
     chat.count='0';
-    this.db.changeChat(chat.id);
+    this.router.navigateByUrl('chatlist/'+chat.id)
   }
 
   onKeyUp(e: KeyboardEvent) {

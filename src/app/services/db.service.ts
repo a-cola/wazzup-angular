@@ -4,18 +4,13 @@ import { Injectable, computed, signal } from '@angular/core';
   providedIn: 'root'
 })
 export class DbService {
+  private names = ["Giovanni","Giangiorgio", "Natascia", "Fabrizio", "Rianldo", "Michele", "Alice", "Iride"]
 
   getRandomTime() {
     const hours = Math.floor(Math.random()*24).toString().padStart(2,'0');
     const minutes = Math.floor(Math.random()*60).toString().padStart(2,'0');
 
     return hours + ':' + minutes
-  }
-
-  selectedChat = signal<string>("");
-
-  changeChat(id:string) {
-    this.selectedChat.set(id);
   }
 
   private chatList = signal<Chat[]>([
@@ -58,6 +53,10 @@ export class DbService {
     return this.getChat(name)?.group ?? false;
   }
 
+  randomNameGenerator() {
+    return this.names[Math.floor(Math.random()*this.names.length)]
+  }
+
   addChat(group:boolean, name:string) {
     this.chatList.set([...this.chatList(), {
       id:window.crypto.randomUUID(),
@@ -75,7 +74,7 @@ export class DbService {
       const hours = currentTime.getHours().toString().padStart(2,'0');
       const minutes = currentTime.getMinutes().toString().padStart(2, '0');
       const msg:Message = {
-          sender:sender,
+          sender:this.isGroup(id)&&sender==="received"?this.randomNameGenerator():sender,
           text:text,
           time:hours+':'+minutes
       }

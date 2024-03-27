@@ -1,3 +1,13 @@
+## [0.0.2]
+
+### Aggiunto
+- Generazione random per chat di tipo gruppo
+- Lo spostamento tra chat avviene tramite Routing
+- Pagina iniziale
+
+### Modifiche
+- Cambiamenti grafici
+
 ## [0.0.1]
 
 ### Aggiunto

@@ -1,6 +1,6 @@
 <div [class]=" type()==='sent'?'sent':'received' ">
     <div [class]=" type()==='sent'?'text-box-s':'text-box-r'">
-        @if (db.isGroup(name())) {<a class="name">{{type()}}</a>}
+        @if (db.isGroup(name())&&type()!=='sent') {<a class="name">{{type()}}</a>}
         <span>{{label()}}</span>
         <a class="chat-time" style="color:gray;">{{time()}}</a>
     </div>

@@ -1,4 +1,4 @@
-import { Component, computed, inject, input } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { OpenedChatComponent } from '../opened-chat/opened-chat.component';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DbService } from '../../services/db.service';
@@ -15,7 +15,7 @@ export class CurrentChatComponent {
 
   db = inject(DbService)
 
-  id = computed(()=>this.db.selectedChat())
+  id = input.required<string>();
 
   isOnline() {
     return Math.random() < 0.1;

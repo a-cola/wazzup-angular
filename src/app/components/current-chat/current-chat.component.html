@@ -6,11 +6,11 @@
             </svg>
         </div>
         <div class="user-info">
-            <span class="name">{{db.getChat(id())?.name}}</span>
-            @if(isOnline()) {
+            <span class="name">{{db.getChat(id())?.name ?? router.navigateByUrl('')}}</span>
+            @if(isOnline) {
                 <span class="last-access">online</span>
             } @else {
-                <span class="last-access">last access {{randomLastAccess()}} minutes ago</span>
+                <span class="last-access">last access {{lastAccess}} minutes ago</span>
             }
         </div>
     </div>

@@ -1,0 +1,11 @@
+<div class="settings">
+    <div class="close-settings">
+        <button (click)="closed.emit()">&times;</button>
+    </div>
+    @for (setting of settings; track $index) {
+        <div class="setting-line">
+            <app-icon class="icon" [label]="setting"/>
+            <span>{{setting}}</span>
+        </div>
+    }
+</div>

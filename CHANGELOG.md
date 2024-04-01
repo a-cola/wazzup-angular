@@ -1,3 +1,12 @@
+## [0.0.3]
+
+## Aggiunto
+- Componente settings per modale impostazioni
+- Componente icon per gestione icone impostazioni
+
+## Fix
+- Risolto errore console dovuto a generazione random dell'ultimo accesso
+
 ## [0.0.2]
 
 ### Aggiunto

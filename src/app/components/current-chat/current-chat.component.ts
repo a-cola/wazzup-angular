@@ -2,6 +2,7 @@ import { Component, inject, input } from '@angular/core';
 import { OpenedChatComponent } from '../opened-chat/opened-chat.component';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DbService } from '../../services/db.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-current-chat',
@@ -17,12 +18,14 @@ export class CurrentChatComponent {
 
   id = input.required<string>();
 
-  isOnline() {
-    return Math.random() < 0.1;
-  }
+  router = inject(Router);
 
-  randomLastAccess() {
-    return Math.floor(Math.random()*59+1);
+  isOnline = false;
+  lastAccess = 1;
+
+  ngOnChanges() {
+    this.isOnline = Math.random() < 0.1;
+    this.lastAccess = Math.floor(Math.random()*59+1);
   }
 
   onKeyUp(e: KeyboardEvent) {
